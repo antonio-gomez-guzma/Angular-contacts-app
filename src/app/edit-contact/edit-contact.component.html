@@ -8,8 +8,16 @@
       <div>
         <input formControlName="firstName" placeholder="First Name" />
         <input formControlName="lastName" placeholder="Last Name" />
-        <input formControlName="dateOfBirth" placeholder="Date of Birth" />
-        <input formControlName="favoritesRanking" placeholder="Favorites Ranking" />
+        <input formControlName="dateOfBirth" type="date" 
+        [value]="contactForm.controls.dateOfBirth.value| date: 'yyyy-MM-dd'" placeholder="Date of Birth"/>
+        <div>
+          <span>Favourites Ranking:</span>
+          <input formControlName="favoritesRanking" type="range" min="0" max="5" placeholder="Favorites Ranking" />
+          <span>{{contactForm.controls.favoritesRanking.value}}</span>
+        </div>
+        <div>
+          <input type="checkbox" formControlName="personal"/> Personal
+        </div>
       </div>
     </section>
     <section>
@@ -41,6 +49,12 @@
             <option *ngFor="let addressType of addressTypes" [value]="addressType.value">{{addressType.title}}</option>
           </select>
         </div>
+      </div>
+    </section>
+    <section>
+      <nav>Notes</nav>
+      <div>
+        <textarea placeholder="Notes" rows="5" formControlName="notes"></textarea>
       </div>
     </section>
     <div class="buttons">
