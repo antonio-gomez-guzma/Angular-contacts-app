@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactsService } from '../contacts/contacts.service';
 
@@ -8,16 +8,29 @@ import { ContactsService } from '../contacts/contacts.service';
   styleUrls: ['./edit-contact.component.css']
 })
 export class EditContactComponent implements OnInit {
-  contactForm = new FormGroup({
-    firstName : new FormControl(),
-    lastName : new FormControl(),
-    dateOfBirth : new FormControl(),
-    favoritesRanking : new FormControl()  
+  contactForm = this.fb.nonNullable.group({
+    id: '',
+    firstName :'',
+    lastName : '',
+    dateOfBirth : <Date|null> null,
+    favoritesRanking : <number|null> null,
+    phone: this.fb.nonNullable.group({
+      phoneNumber: '',
+      phoneType: '',
+    }),
+    address: this.fb.nonNullable.group({
+      streetAddress: '',
+      city: '',
+      state:'',
+      postalCode: '',
+      addressType: '',
+    })
   });
 
   constructor(private route: ActivatedRoute,
      private contactService:ContactsService,
-     private router: Router
+     private router: Router,
+     private fb: FormBuilder
     ) { }
 
   ngOnInit() {
@@ -27,15 +40,12 @@ export class EditContactComponent implements OnInit {
     this.contactService.getContact(contactId).subscribe((contact) => {
       if(!contact) return;
 
-      this.contactForm.controls.firstName.setValue(contact.firstName);
-      this.contactForm.controls.lastName.setValue(contact.lastName);
-      this.contactForm.controls.dateOfBirth.setValue(contact.dateOfBirth);
-      this.contactForm.controls.favoritesRanking.setValue(contact.favoritesRanking);
+      this.contactForm.setValue(contact);
     })
   }
 
   saveContact() {
-    this.contactService.saveContact(this.contactForm.value).subscribe({
+    this.contactService.saveContact(this.contactForm.getRawValue()).subscribe({
       next: () => this.router.navigate(['/contacts'])
     });
   }
