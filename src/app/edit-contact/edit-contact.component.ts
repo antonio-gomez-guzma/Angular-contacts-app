@@ -13,6 +13,7 @@ export class EditContactComponent implements OnInit {
   phoneTypes = phoneTypeValues;
   contactForm = this.fb.nonNullable.group({
     id: '',
+    personal: false,
     firstName :'',
     lastName : '',
     dateOfBirth : <Date|null> null,
